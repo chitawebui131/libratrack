@@ -3,12 +3,12 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
-	"github.com/swaggo/gin-swagger"
 	"github.com/swaggo/files"
-	"net/http"
+	"github.com/swaggo/gin-swagger"
 	"libratrack/internal/handler"
 	"libratrack/internal/middleware"
 	"libratrack/internal/repository"
+	"net/http"
 )
 
 // @title Libratrack API
