@@ -16,7 +16,15 @@ type BookHandler struct {
 func NewBookHandler(repo repository.BookRepository) *BookHandler {
 	return &BookHandler{repo: repo}
 }
-
+// @Summary      Create a new book
+// @Description  Create a new book in the catalog
+// @Tags         books
+// @Accept       json
+// @Produce      json
+// @Param        book  body  model.CreateBookRequest  true  "Book data"
+// @Success      201   {object}  model.Book
+// @Failure      422   {object}  map[string]interface{}
+// @Router       /books [post]
 func (h *BookHandler) CreateBook(c *gin.Context) {
 	var req model.CreateBookRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -53,6 +61,15 @@ func (h *BookHandler) CreateBook(c *gin.Context) {
 	c.JSON(http.StatusCreated, book)
 }
 
+// @Summary      List books
+// @Description  Get list of books with optional filtering
+// @Tags         books
+// @Produce      json
+// @Param        category  query  string  false  "Filter by category"
+// @Param        page      query  int     false  "Page number"  default(1)
+// @Param        limit     query  int     false  "Items per page"  default(10)
+// @Success      200  {array}  model.Book
+// @Router       /books [get]
 func (h *BookHandler) ListBooks(c *gin.Context) {
 	category := c.Query("category")
 	pageStr := c.DefaultQuery("page", "1")
@@ -76,6 +93,14 @@ func (h *BookHandler) ListBooks(c *gin.Context) {
 	c.JSON(http.StatusOK, books)
 }
 
+// @Summary      Get a book by ID
+// @Description  Get a single book by its ID
+// @Tags         books
+// @Produce      json
+// @Param        id   path  int  true  "Book ID"
+// @Success      200  {object}  model.Book
+// @Failure      404  {object}  map[string]interface{}
+// @Router       /books/{id} [get]
 func (h *BookHandler) GetBook(c *gin.Context) {
 	idStr := c.Param("id")
 	id, err := strconv.ParseUint(idStr, 10, 32)
@@ -115,6 +140,19 @@ func (h *BookHandler) GetBook(c *gin.Context) {
 	c.JSON(http.StatusOK, book)
 }
 
+
+
+// @Summary      Update a book
+// @Description  Update an existing book
+// @Tags         books
+// @Accept       json
+// @Produce      json
+// @Param        id    path  int  true  "Book ID"
+// @Param        book  body  model.UpdateBookRequest  true  "Book data"
+// @Success      200   {object}  model.Book
+// @Failure      404   {object}  map[string]interface{}
+// @Failure      422   {object}  map[string]interface{}
+// @Router       /books/{id} [put]
 func (h *BookHandler) UpdateBook(c *gin.Context) {
 	idStr := c.Param("id")
 	id, err := strconv.ParseUint(idStr, 10, 32)
@@ -174,6 +212,13 @@ func (h *BookHandler) UpdateBook(c *gin.Context) {
 	c.JSON(http.StatusOK, book)
 }
 
+// @Summary      Delete a book
+// @Description  Delete a book by ID
+// @Tags         books
+// @Param        id  path  int  true  "Book ID"
+// @Success      204  "No Content"
+// @Failure      404  {object}  map[string]interface{}
+// @Router       /books/{id} [delete]
 func (h *BookHandler) DeleteBook(c *gin.Context) {
 	idStr := c.Param("id")
 	id, err := strconv.ParseUint(idStr, 10, 32)
