@@ -16,6 +16,7 @@ type BookHandler struct {
 func NewBookHandler(repo repository.BookRepository) *BookHandler {
 	return &BookHandler{repo: repo}
 }
+
 // @Summary      Create a new book
 // @Description  Create a new book in the catalog
 // @Tags         books
@@ -139,8 +140,6 @@ func (h *BookHandler) GetBook(c *gin.Context) {
 
 	c.JSON(http.StatusOK, book)
 }
-
-
 
 // @Summary      Update a book
 // @Description  Update an existing book
