@@ -20,14 +20,14 @@ type BookRepository interface {
 }
 
 type inMemoryBookRepository struct {
-	books map[uint]*model.Book
+	books  map[uint]*model.Book
 	nextID uint
-	mu    sync.RWMutex
+	mu     sync.RWMutex
 }
 
 func NewInMemoryBookRepository() BookRepository {
 	return &inMemoryBookRepository{
-		books: make(map[uint]*model.Book),
+		books:  make(map[uint]*model.Book),
 		nextID: 1,
 	}
 }
