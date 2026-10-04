@@ -53,6 +53,10 @@ func CORSMiddleware() gin.HandlerFunc {
 		if origin == "" {
 			origin = "*"
 		}
+		allowedOrigin := os.Getenv(ALLOWED_ORIGIN)
+		if allowedOrigin != "" {
+			origin = allowedOrigin
+		}
 		c.Writer.Header().Set("Access-Control-Allow-Origin", origin)
 		c.Writer.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
 		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
