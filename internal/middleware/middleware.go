@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"os"
 	"time"
-
+  "log"
 	"github.com/gin-gonic/gin"
 )
 
@@ -15,18 +15,9 @@ const (
 func LoggingMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		start := time.Now()
-		c.Next()
-		latency := time.Since(start)
-		method := c.Request.Method
-		path := c.Request.URL.Path
-		status := c.Writer.Status()
-		c.Header("X-Response-Time", latency.String())
-		c.JSON(status, gin.H{
-			"method":   method,
-			"path":     path,
-			"status":   status,
-			"duration": latency,
-		})
+		c.Next() 
+		duration := time.Since(start)
+		log.Printf("%s %s %d %v", c.Request.Method, c.Request.URL.Path, c.Writer.Status(), duration)
 	}
 }
 

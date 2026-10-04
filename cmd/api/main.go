@@ -2,8 +2,10 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/swaggo/files"
-	"github.com/swaggo/gin-swagger"
+  _ "libratrack/docs"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
+
 	"libratrack/internal/handler"
 	"libratrack/internal/middleware"
 	"libratrack/internal/repository"
