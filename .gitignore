@@ -1,0 +1,4 @@
+.aider*
+*.log
+bin/
+vendor/
