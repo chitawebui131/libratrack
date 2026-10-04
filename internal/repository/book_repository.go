@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/libratrack/internal/model"
+	"libratrack/internal/model"
 )
 
 var ErrNotFound = errors.New("not found")
