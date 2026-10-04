@@ -21,10 +21,10 @@ func LoggingMiddleware() gin.HandlerFunc {
 		status := c.Writer.Status()
 		c.Header("X-Response-Time", latency.String())
 		c.JSON(status, gin.H{
-			"method":    method,
-			"path":      path,
-			"status":    status,
-			"duration":  latency,
+			"method":   method,
+			"path":     path,
+			"status":   status,
+			"duration": latency,
 		})
 	}
 }
