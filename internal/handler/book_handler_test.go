@@ -26,12 +26,12 @@ func TestCreateBook(t *testing.T) {
 	w := httptest.NewRecorder()
 	c, _ := gin.CreateTestContext(w)
 	c.Request, _ = http.NewRequest("POST", "/api/v1/books", gin.H{
-		"title":         req.Title,
-		"isbn":          req.ISBN,
-		"author":        req.Author,
-		"category":      req.Category,
+		"title":          req.Title,
+		"isbn":           req.ISBN,
+		"author":         req.Author,
+		"category":       req.Category,
 		"published_year": req.PublishedYear,
-		"description":   req.Description,
+		"description":    req.Description,
 	})
 
 	h.CreateBook(c)
@@ -108,12 +108,12 @@ func TestUpdateBook(t *testing.T) {
 	w := httptest.NewRecorder()
 	c, _ := gin.CreateTestContext(w)
 	c.Request, _ = http.NewRequest("PUT", "/api/v1/books/1", gin.H{
-		"title":         updateReq.Title,
-		"isbn":          updateReq.ISBN,
-		"author":        updateReq.Author,
-		"category":      updateReq.Category,
+		"title":          updateReq.Title,
+		"isbn":           updateReq.ISBN,
+		"author":         updateReq.Author,
+		"category":       updateReq.Category,
 		"published_year": updateReq.PublishedYear,
-		"description":   updateReq.Description,
+		"description":    updateReq.Description,
 	})
 
 	h.UpdateBook(c)
