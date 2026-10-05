@@ -6,7 +6,7 @@ definitions:
         type: string
       category:
         type: string
-      createdAt:
+      created_at:
         type: string
       description:
         type: string
@@ -14,11 +14,11 @@ definitions:
         type: integer
       isbn:
         type: string
-      publishedYear:
+      published_year:
         type: integer
       title:
         type: string
-      updatedAt:
+      updated_at:
         type: string
     type: object
   model.CreateBookRequest:
@@ -81,7 +81,7 @@ paths:
         name: page
         type: integer
       - default: 10
-        description: Items per page
+        description: Items per page (max 100)
         in: query
         name: limit
         type: integer
@@ -94,6 +94,11 @@ paths:
             items:
               $ref: '#/definitions/model.Book'
             type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
       summary: List books
       tags:
       - books
@@ -135,6 +140,11 @@ paths:
       responses:
         "204":
           description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
         "404":
           description: Not Found
           schema:
@@ -158,6 +168,11 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/model.Book'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
         "404":
           description: Not Found
           schema:
@@ -189,6 +204,11 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/model.Book'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
         "404":
           description: Not Found
           schema:

@@ -42,7 +42,7 @@ const docTemplate = `{
                     {
                         "type": "integer",
                         "default": 10,
-                        "description": "Items per page",
+                        "description": "Items per page (max 100)",
                         "name": "limit",
                         "in": "query"
                     }
@@ -55,6 +55,13 @@ const docTemplate = `{
                             "items": {
                                 "$ref": "#/definitions/model.Book"
                             }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
                         }
                     }
                 }
@@ -125,6 +132,13 @@ const docTemplate = `{
                             "$ref": "#/definitions/model.Book"
                         }
                     },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
                     "404": {
                         "description": "Not Found",
                         "schema": {
@@ -171,6 +185,13 @@ const docTemplate = `{
                             "$ref": "#/definitions/model.Book"
                         }
                     },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
                     "404": {
                         "description": "Not Found",
                         "schema": {
@@ -206,6 +227,13 @@ const docTemplate = `{
                     "204": {
                         "description": "No Content"
                     },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
                     "404": {
                         "description": "Not Found",
                         "schema": {
@@ -227,7 +255,7 @@ const docTemplate = `{
                 "category": {
                     "type": "string"
                 },
-                "createdAt": {
+                "created_at": {
                     "type": "string"
                 },
                 "description": {
@@ -239,13 +267,13 @@ const docTemplate = `{
                 "isbn": {
                     "type": "string"
                 },
-                "publishedYear": {
+                "published_year": {
                     "type": "integer"
                 },
                 "title": {
                     "type": "string"
                 },
-                "updatedAt": {
+                "updated_at": {
                     "type": "string"
                 }
             }

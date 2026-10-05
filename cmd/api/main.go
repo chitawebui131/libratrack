@@ -1,15 +1,19 @@
 package main
 
 import (
+	"log"
+	"net/http"
+	"os"
+
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
+
 	_ "libratrack/docs"
 
 	"libratrack/internal/handler"
 	"libratrack/internal/middleware"
 	"libratrack/internal/repository"
-	"net/http"
 )
 
 // @title Libratrack API
@@ -17,7 +21,8 @@ import (
 // @description This is a sample server for Libratrack
 // @BasePath /api/v1
 
-func main() {
+// setupRouter builds the router without starting the server, so it can be tested with httptest.
+func setupRouter() *gin.Engine {
 	r := gin.New()
 
 	r.Use(middleware.RecoveryMiddleware())
@@ -42,5 +47,16 @@ func main() {
 		c.JSON(http.StatusOK, gin.H{"status": "ok"})
 	})
 
-	r.Run(":8080")
+	return r
+}
+
+func main() {
+	addr := ":8080"
+	if p := os.Getenv("PORT"); p != "" {
+		addr = ":" + p
+	}
+
+	if err := setupRouter().Run(addr); err != nil {
+		log.Fatalf("server failed: %v", err)
+	}
 }
