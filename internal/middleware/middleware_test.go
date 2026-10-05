@@ -288,3 +288,79 @@ func TestChain_PanicResponseKeepsCORSHeaders(t *testing.T) {
 		t.Error("500 response after panic lost its CORS headers; browsers would hide the error from the frontend")
 	}
 }
+
+// ---------- Behavior added when fixing the middleware ----------
+
+func TestRecovery_DoesNotLeakPanicValueToClient(t *testing.T) {
+	captureLog(t)
+	r := gin.New()
+	r.Use(middleware.RecoveryMiddleware())
+	r.GET("/boom", func(c *gin.Context) { panic("secret-internal-detail") })
+
+	w := serve(r, http.MethodGet, "/boom", nil)
+
+	body := w.Body.String()
+	if strings.Contains(body, "secret-internal-detail") {
+		t.Errorf("panic value leaked to the client: %s", body)
+	}
+	if strings.Contains(body, "details") {
+		t.Errorf("response must not contain a details field: %s", body)
+	}
+}
+
+func TestRecovery_LogsPanicValueAndStackTrace(t *testing.T) {
+	buf := captureLog(t)
+	r := gin.New()
+	r.Use(middleware.RecoveryMiddleware())
+	r.GET("/boom", func(c *gin.Context) { panic("boom-for-log") })
+
+	serve(r, http.MethodGet, "/boom", nil)
+
+	out := buf.String()
+	if !strings.Contains(out, "panic recovered") || !strings.Contains(out, "boom-for-log") {
+		t.Errorf("panic value was not logged: %q", out)
+	}
+	if !strings.Contains(out, "goroutine") {
+		t.Errorf("stack trace was not logged: %q", out)
+	}
+}
+
+// Recovery is the outer middleware here (the order used in main.go);
+// a panicking request must still produce a log line with status 500.
+func TestLogging_LogsPanicWhenRecoveryIsOuter(t *testing.T) {
+	buf := captureLog(t)
+	r := gin.New()
+	r.Use(middleware.RecoveryMiddleware(), middleware.LoggingMiddleware())
+	r.GET("/boom", func(c *gin.Context) { panic("boom") })
+
+	w := serve(r, http.MethodGet, "/boom", nil)
+
+	if w.Code != http.StatusInternalServerError {
+		t.Fatalf("expected 500, got %d", w.Code)
+	}
+	if !strings.Contains(buf.String(), "GET /boom 500") {
+		t.Errorf("expected a 500 log line for the panicking request, got: %q", buf.String())
+	}
+}
+
+func TestCORS_SetsVaryOrigin(t *testing.T) {
+	t.Setenv(middleware.ALLOWED_ORIGIN, "")
+	var called bool
+
+	w := serve(newCORSRouter(&called), http.MethodGet, "/x", map[string]string{"Origin": "http://example.com"})
+
+	if got := w.Header().Get("Vary"); !strings.Contains(got, "Origin") {
+		t.Errorf("expected Vary: Origin, got %q", got)
+	}
+}
+
+func TestCORS_SetsMaxAge(t *testing.T) {
+	t.Setenv(middleware.ALLOWED_ORIGIN, "")
+	var called bool
+
+	w := serve(newCORSRouter(&called), http.MethodOptions, "/x", map[string]string{"Origin": "http://example.com"})
+
+	if got := w.Header().Get("Access-Control-Max-Age"); got != "86400" {
+		t.Errorf("expected Max-Age 86400, got %q", got)
+	}
+}
